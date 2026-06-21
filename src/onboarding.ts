@@ -82,6 +82,24 @@ function invalidKeyMessage(): string {
   ].join("\n");
 }
 
+/** 接続状況に応じた案内メッセージを返す（純関数・テスト対象）。 */
+export function buildConnectMessage(status: ConnectStatus): string {
+  if (status.hkValid) return connectedMessage(status);
+  if (status.hkKeyPresent) return invalidKeyMessage();
+  return freeModeMessage(status);
+}
+
+/** how_to_connect が返す機械可読メタ（純関数・テスト対象）。 */
+export function connectMeta(status: ConnectStatus) {
+  return {
+    connected: status.hkValid,
+    mode: status.hkValid ? "platform" : "free",
+    has_platform_key: status.hkKeyPresent,
+    has_steam_publisher_key: status.publisherKeyPresent,
+    register_url: "https://hatsubai-kun.com",
+  };
+}
+
 export function registerConnectTool(server: McpServer, status: ConnectStatus): void {
   server.registerTool(
     "how_to_connect",
@@ -95,30 +113,12 @@ export function registerConnectTool(server: McpServer, status: ConnectStatus): v
       inputSchema: {},
     },
     async () => {
-      const text = status.hkValid
-        ? connectedMessage(status)
-        : status.hkKeyPresent
-          ? invalidKeyMessage()
-          : freeModeMessage(status);
       return {
         content: [
-          { type: "text" as const, text },
+          { type: "text" as const, text: buildConnectMessage(status) },
           {
             type: "text" as const,
-            text:
-              "```json\n" +
-              JSON.stringify(
-                {
-                  connected: status.hkValid,
-                  mode: status.hkValid ? "platform" : "free",
-                  has_platform_key: status.hkKeyPresent,
-                  has_steam_publisher_key: status.publisherKeyPresent,
-                  register_url: "https://hatsubai-kun.com",
-                },
-                null,
-                2,
-              ) +
-              "\n```",
+            text: "```json\n" + JSON.stringify(connectMeta(status), null, 2) + "\n```",
           },
         ],
       };
