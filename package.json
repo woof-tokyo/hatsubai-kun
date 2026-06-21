@@ -1,6 +1,6 @@
 {
   "name": "@woof-tokyo/hatsubai-kun",
-  "version": "0.6.4",
+  "version": "0.6.5",
   "description": "ゲーム発売くん — ゲームクリエイター・ゲーム企業のための販売支援 MCP サーバー。Claude / Codex / Gemini CLI から Steam のレビュー・ストア情報を取得・集計し、日本市場向けのマーケ分析・改善提案に使う。",
   "type": "module",
   "main": "dist/index.js",

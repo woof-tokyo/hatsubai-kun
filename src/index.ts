@@ -9,6 +9,7 @@ import { registerPlatformTools } from "./platformtools.js";
 import { registerSyncTools } from "./synctools.js";
 import { registerEventTools } from "./eventtools.js";
 import { registerNewsTools } from "./newstools.js";
+import { registerConnectTool } from "./onboarding.js";
 import { verifyKey } from "./platform/client.js";
 
 // ローカル開発用の簡易 .env 読み込み（既存の環境変数は上書きしない）
@@ -39,12 +40,14 @@ registerPrompts(server);
 // ※ キーなしでも基本機能（Steam分析）は使える。
 const hkKey = process.env.HATSUBAIKUN_KEY?.trim();
 let hkValid = false;
+let hkUser: { studio_name?: string | null; email?: string } | undefined;
 if (hkKey) {
   try {
     const v = await verifyKey(hkKey);
     if (v.valid) {
       registerPlatformTools(server, hkKey);
       hkValid = true;
+      hkUser = v.user;
       console.error(
         `[hatsubai-kun] platform tools enabled for ${v.user?.studio_name ?? v.user?.email ?? "user"}`,
       );
@@ -73,6 +76,15 @@ if (publisherKey && hkValid && hkKey) {
   registerSyncTools(server, { publisherKey, hkKey });
   console.error("[hatsubai-kun] sales sync tool enabled (publisher + platform key)");
 }
+
+// 接続案内ツールは常時登録。未登録なら登録手順、接続済みなら使える機能を案内する。
+registerConnectTool(server, {
+  hkKeyPresent: Boolean(hkKey),
+  hkValid,
+  studioName: hkUser?.studio_name,
+  email: hkUser?.email,
+  publisherKeyPresent: Boolean(publisherKey),
+});
 
 // インディーイベント: list_events は公開（キー不要）で常に登録。
 // submit_event は有効な発売くんキーがあるときだけ登録（申請はpendingで投入）。
