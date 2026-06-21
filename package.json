@@ -1,0 +1,53 @@
+{
+  "name": "@woof-tokyo/hatsubai-kun",
+  "version": "0.6.4",
+  "description": "ゲーム発売くん — ゲームクリエイター・ゲーム企業のための販売支援 MCP サーバー。Claude / Codex / Gemini CLI から Steam のレビュー・ストア情報を取得・集計し、日本市場向けのマーケ分析・改善提案に使う。",
+  "type": "module",
+  "main": "dist/index.js",
+  "files": [
+    "dist"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "dev": "tsx src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "test": "tsx --test test/*.test.ts",
+    "prepublishOnly": "npm run build && npm test"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "steam",
+    "reviews",
+    "marketing",
+    "game",
+    "hatsubai",
+    "japanese",
+    "woof"
+  ],
+  "license": "MIT",
+  "author": "woof Inc. (https://woof.tokyo)",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/woof-tokyo/hatsubai-kun.git"
+  },
+  "homepage": "https://hatsubai-kun.com",
+  "bugs": {
+    "url": "https://github.com/woof-tokyo/hatsubai-kun/issues"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.28.0",
+    "zod": "^3.25.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.0"
+  },
+  "bin": {
+    "hatsubai-kun": "dist/index.js"
+  }
+}

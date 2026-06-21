@@ -1,0 +1,9 @@
+node_modules/
+dist/
+*.log
+.env
+.env.*
+!.env.example
+
+# 念のため: 社内ドキュメントは公開しない（このリポジトリには存在しないはず）
+開発ドキュメント.md
